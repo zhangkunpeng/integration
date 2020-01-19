@@ -18,7 +18,11 @@ def execute():
     if unknown_args:
         log.critical('Argument %s must be input', unknown_args)
     if env.pkg:
-        env.pkglist = [env.pkg]
+        pkglist_path = os.path.join(env.source, env.pkg)
+        if os.path.isfile(pkglist_path):
+            env.pkglist_filename = env.pkg
+        elif os.path.isdir(pkglist_path):
+            env.pkglist = [env.pkg]
     env.max_workers = 4
     log.CONF('%s-%s' % (env.SYSTEM, env.DISTRO), logdir=env.rootdir)
     chain = build.BuildChain(**env)
