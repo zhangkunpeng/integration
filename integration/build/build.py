@@ -72,10 +72,10 @@ class BaseBuild(object):
         return os.path.exists(self.success_flag_file)
 
     def prepare_source(self):
-        pass
+        log.info('%s prepare_source', self.DISTRO)
 
     def compile(self):
-        pass
+        log.info('%s compile', self.DISTRO)
 
     def update_repo(self, max_workers=None):
         pass
