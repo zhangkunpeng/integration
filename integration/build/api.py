@@ -5,7 +5,6 @@ import yaml
 from integration.build import build
 from integration.common import log
 from integration.common.context import Context
-from integration.build.centos import CentosBuild
 _ENV = ['DISTRO', 'SYSTEM']
 _fields = ['source', 'type', 'rootdir', 'postfix', 'mirror', 'release', 'output']
 

@@ -18,6 +18,7 @@ ABSOLUTE_MAX_WORKERS = 4
 
 
 class BaseBuild(object):
+    from integration.build.centos import CentosBuild
     DISTRO = "base"
     ROOTDIR = None
     WORKDIR = None
