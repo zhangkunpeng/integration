@@ -1,6 +1,6 @@
 __all__ = ['rpmutil', 'CentosBuild', 'mock']
 
-from integration.build.build import BaseBuild
+from integration.build import BaseBuild
 from integration.build import shell
 from integration.build.api import env
 from integration.common import log, utils

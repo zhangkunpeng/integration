@@ -1,6 +1,6 @@
 import unittest, tempfile, os
 from integration.tests.test_common import BaseCase
-from integration.build import env
+from integration.build.api import env
 from integration.build import api
 
 

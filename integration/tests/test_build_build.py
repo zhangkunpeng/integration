@@ -1,6 +1,6 @@
 import unittest, os
 from integration.build.build import BuildChain, BaseBuild
-from integration.build import env
+from integration.build.api import env
 from integration.common.exception import *
 from integration.tests.test_common import BaseCase
 from integration.build import shell

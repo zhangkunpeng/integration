@@ -2,7 +2,7 @@ import argparse
 import os
 import yaml
 
-from integration.build import build
+from integration.build.build import BuildChain
 from integration.common import log
 from integration.common.context import Context
 _ENV = ['DISTRO', 'SYSTEM']
@@ -28,7 +28,7 @@ def execute():
     env.max_workers = 4
     log.CONF('%s-%s' % (env.SYSTEM, env.DISTRO), logdir=env.rootdir)
     log.info(env)
-    chain = build.BuildChain(**env)
+    chain = BuildChain(**env)
     chain.fetch_source()
     chain.fetch_package_list()
     chain.build_iteration()
