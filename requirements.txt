@@ -5,3 +5,5 @@
 # We have an older pbr which seems to work...
 # pbr!=2.1.0,>=2.0.0 # Apache-2.0
 pbr >= 1.8 # Apache-2.0
+pyyaml
+psutil

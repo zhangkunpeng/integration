@@ -44,5 +44,6 @@ def error(msg, *args, **kwargs):
 
 
 def critical(msg, *args, **kwargs):
-    logger.critical(msg, *args, **kwargs)
+    if logger:
+        logger.critical(msg, *args, **kwargs)
     raise CriticalException(msg, *args, **kwargs)
