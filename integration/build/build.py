@@ -142,6 +142,7 @@ class BuildChain(object):
         signal.signal(signal.SIGABRT, build_handler)
 
     def build_packages(self, to_build_list):
+        from integration.build.centos import CentosBuild
         self.signal_handler()
         for pkg in to_build_list:
             index = self.get_free_process_index()
