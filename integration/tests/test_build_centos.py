@@ -3,8 +3,8 @@ import tempfile
 import os
 from unittest.mock import patch
 from integration.build.centos import mock as m
-from integration.build.centos import CentosBuild
-from integration.build import env
+from integration.build.build import BaseBuild
+from integration.build.api import env
 from integration.tests.test_common import BaseCase
 
 
@@ -12,7 +12,7 @@ class MockCase(BaseCase):
 
     def setUp(self):
         self.workdir = tempfile.TemporaryDirectory()
-        env.system_name = 'starlingx'
+        env.SYSTEM = 'starlingx'
 
     def tearDown(self):
         self.workdir.cleanup()
@@ -44,8 +44,6 @@ class CentosBuildCase(BaseCase):
     def setUp(self):
         self.source = tempfile.TemporaryDirectory()
         self.rootdir = tempfile.TemporaryDirectory()
-        env.SYSTEM = 'starlingx'
-        env.rootdir = self.rootdir.name
         env.mirror = self.rootdir.name
 
     def tearDown(self):
@@ -55,10 +53,12 @@ class CentosBuildCase(BaseCase):
     @patch('integration.build.centos.mock.init_config_opts')
     def test_create_centosbuild(self, mock_init_config_opts):
         mock_init_config_opts.side_effect = m.config_opts = {'yum.conf': ""}
-        centos = CentosBuild('testpkg', source=self.source.name, index=0)
+        os.environ.setdefault('DISTRO', 'centos')
+        centos = BaseBuild('testpkg', source=self.source.name, index=0, rootdir=self.rootdir.name)
         self.assertEqual(0, centos.mock.index)
         self.assertEqual(True, os.path.exists(centos.mock.config_dir))
         self.assertEqual(True, os.path.exists(centos.mock.config_file))
+
 
 if __name__ == '__main__':
     unittest.main()
