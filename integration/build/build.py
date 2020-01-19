@@ -26,7 +26,6 @@ class BaseBuild(object):
     __dict__ = context.Context()
 
     def __new__(cls, *args, **kwargs):
-        from integration.build.centos import CentosBuild
         for c in BaseBuild.__subclasses__():
             if c.DISTRO == env.DISTRO:
                 return object.__new__(c)
