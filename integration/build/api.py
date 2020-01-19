@@ -20,7 +20,7 @@ def execute():
     if env.pkg:
         env.pkglist = [env.pkg]
     env.max_workers = 4
-
+    log.CONF('%s-%s' % (env.SYSTEM, env.DISTRO), logdir=env.rootdir)
     chain = build.BuildChain(**env)
     chain.fetch_source()
     chain.fetch_package_list()
