@@ -31,6 +31,7 @@ class BaseBuild(object):
     def __new__(cls, *args, **kwargs):
         from integration.build.centos import CentosBuild
         for c in BaseBuild.__subclasses__():
+            print(c, c.DISTRO, os.environ.get('DISTRO', 'base'))
             if c.DISTRO == os.environ.get('DISTRO', 'base'):
                 return object.__new__(c)
         return object.__new__(cls)
