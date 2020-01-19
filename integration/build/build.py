@@ -26,7 +26,6 @@ class BaseBuild(object):
     def __new__(cls, *args, **kwargs):
         from integration.build.centos import CentosBuild
         for c in BaseBuild.__subclasses__():
-            print(c, c.DISTRO, os.environ.get('DISTRO', 'base'))
             if c.DISTRO == os.environ.get('DISTRO', 'base'):
                 return object.__new__(c)
         return object.__new__(cls)
@@ -140,6 +139,9 @@ class BuildChain(object):
         signal.signal(signal.SIGHUP, build_handler)
         signal.signal(signal.SIGABRT, build_handler)
 
+    def do_build(self, build):
+        build.do_build()
+
     def build_packages(self, to_build_list):
         #from integration.build.centos import CentosBuild
         self.signal_handler()
@@ -152,7 +154,7 @@ class BuildChain(object):
             log.info("------ Start build %s in process %d ------", pkg, index)
             if pkg not in self.builds:
                 self.builds[pkg] = BaseBuild(pkg, source=os.path.join(self.source, pkg), index=index, rootdir=self.rootdir)
-            p = multiprocessing.Process(target=BaseBuild.do_build, args=(self.builds[pkg],))
+            p = multiprocessing.Process(target=self.do_build, args=(self.builds[pkg],))
             self.procdata.append({'proc': p, 'build': self.builds[pkg]})
             p.start()
         while len(self.procdata) > 0:
