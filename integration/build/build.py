@@ -144,9 +144,6 @@ class BuildChain(object):
         signal.signal(signal.SIGHUP, build_handler)
         signal.signal(signal.SIGABRT, build_handler)
 
-    @staticmethod
-
-
     def build_packages(self, to_build_list):
         #from integration.build.centos import CentosBuild
         self.signal_handler()
