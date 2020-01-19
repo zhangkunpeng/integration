@@ -5,6 +5,7 @@ import re
 import signal
 import time
 import json
+import importlib
 
 from integration.build import shell, BaseBuild, SKIP, SUCCESS, FAIL
 from integration.common import context, log
@@ -17,6 +18,17 @@ ABSOLUTE_MAX_WORKERS = 4
 def do_build(build):
     log.info("Build %s in %s", build.pkg, build.DISTRO)
     build.do_build()
+
+
+def new_build_instance(*args, **kwargs):
+    centos = importlib.import_module('integration.build.%s' % os.environ.get('DISTRO'))
+    for name in dir(centos):
+        c = getattr(centos, name)
+        if type(c) == type:
+            for base in c.__bases__:
+                if base == BaseBuild:
+                    return c(*args, **kwargs)
+    return BaseBuild(*args, **kwargs)
 
 
 class BuildChain(object):
@@ -81,7 +93,8 @@ class BuildChain(object):
                 index = self.get_free_process_index()
             log.info("------ Start build %s in process %d ------", pkg, index)
             if pkg not in self.builds:
-                self.builds[pkg] = BaseBuild(pkg, source=os.path.join(self.source, pkg), index=index, rootdir=self.rootdir)
+                self.builds[pkg] = new_build_instance(pkg, source=os.path.join(self.source, pkg),
+                                                      index=index, rootdir=self.rootdir)
             p = multiprocessing.Process(target=do_build, args=(self.builds[pkg],))
             self.procdata.append({'proc': p, 'build': self.builds[pkg]})
             p.start()

@@ -1,5 +1,5 @@
 import unittest, os
-from integration.build.build import BuildChain, BaseBuild
+from integration.build.build import BuildChain
 from integration.build.api import env
 from integration.common.exception import *
 from integration.tests.test_common import BaseCase
@@ -115,6 +115,8 @@ class BuildChainCase(BaseCase):
         self.assertEqual(1, buildchain.builds['test2'].index)
         self.assertEqual(0, buildchain.builds['test3'].index)
 
+    def test_new_build(self):
+        os.environ.setdefault('DISTRO', 'centos')
 
 if __name__ == '__main__':
     unittest.main()

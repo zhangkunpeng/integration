@@ -11,13 +11,13 @@ class BaseBuild(object):
     WORKDIR = None
     LOCAL_REPO_DIR = None
 
-    def __new__(cls, *args, **kwargs):
-        from integration.build.centos import CentosBuild
-        for c in BaseBuild.__subclasses__():
-            print(c, c.DISTRO, os.environ.get('DISTRO', 'base'))
-            if c.DISTRO == os.environ.get('DISTRO', 'base'):
-                return c.__new__(*args, **kwargs)
-        return object.__new__(cls)
+    # def __new__(cls, *args, **kwargs):
+    #     from integration.build.centos import CentosBuild
+    #     for c in BaseBuild.__subclasses__():
+    #         print(c, c.DISTRO, os.environ.get('DISTRO', 'base'))
+    #         if c.DISTRO == os.environ.get('DISTRO', 'base'):
+    #             return c.__new__(*args, **kwargs)
+    #     return object.__new__(cls)
 
     def __init__(self, pkg, rootdir=None, source=None, index=None, **kwargs):
         self.pkg = pkg
