@@ -6,7 +6,7 @@ import signal
 import time
 import json
 
-from integration.build import shell, env
+from integration.build import shell
 from integration.common import context, log
 from integration.common.exception import *
 
@@ -27,13 +27,13 @@ class BaseBuild(object):
 
     def __new__(cls, *args, **kwargs):
         for c in BaseBuild.__subclasses__():
-            if c.DISTRO == env.DISTRO:
+            if c.DISTRO == os.environ.get('DISTRO', 'base'):
                 return object.__new__(c)
         return object.__new__(cls)
 
-    def __init__(self, pkg, source=None, index=None, **kwargs):
+    def __init__(self, pkg, rootdir=None, source=None, index=None, **kwargs):
         self.pkg = pkg
-        self.__class__.ROOTDIR = env.rootdir
+        self.__class__.ROOTDIR = rootdir
         self.source = source
         self.pkgdir = os.path.join(source, pkg)
         self.name = os.path.basename(self.pkg)
@@ -150,7 +150,7 @@ class BuildChain(object):
                 index = self.get_free_process_index()
             log.info("------ Start build %s in process %d ------", pkg, index)
             if pkg not in self.builds:
-                self.builds[pkg] = BaseBuild(pkg, source=os.path.join(self.source, pkg), index=index)
+                self.builds[pkg] = BaseBuild(pkg, source=os.path.join(self.source, pkg), index=index, rootdir=self.rootdir)
             p = multiprocessing.Process(target=BaseBuild.do_build, args=(self.builds[pkg],))
             self.procdata.append({'proc': p, 'build': self.builds[pkg]})
             p.start()
