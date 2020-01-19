@@ -23,10 +23,9 @@ class BaseBuild(object):
     WORKDIR = None
     LOCAL_REPO_DIR = None
 
-    __dict__ = context.Context()
-
     def __new__(cls, *args, **kwargs):
         from integration.build.centos import CentosBuild
+        print(BaseBuild.__subclasses__())
         for c in BaseBuild.__subclasses__():
             if c.DISTRO == os.environ.get('DISTRO', 'base'):
                 return object.__new__(c)
