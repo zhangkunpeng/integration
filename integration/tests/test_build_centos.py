@@ -55,6 +55,7 @@ class CentosBuildCase(BaseCase):
         mock_init_config_opts.side_effect = m.config_opts = {'yum.conf': ""}
         os.environ.setdefault('DISTRO', 'centos')
         centos = BaseBuild('testpkg', source=self.source.name, index=0, rootdir=self.rootdir.name)
+        self.assertEqual('centos', centos.DISTRO)
         self.assertEqual(0, centos.mock.index)
         self.assertEqual(True, os.path.exists(centos.mock.config_dir))
         self.assertEqual(True, os.path.exists(centos.mock.config_file))

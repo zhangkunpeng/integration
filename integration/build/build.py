@@ -26,6 +26,7 @@ class BaseBuild(object):
     def __new__(cls, *args, **kwargs):
         from integration.build.centos import CentosBuild
         for c in BaseBuild.__subclasses__():
+            print(c, c.DISTRO, os.environ.get('DISTRO', 'base'))
             if c.DISTRO == os.environ.get('DISTRO', 'base'):
                 return object.__new__(c)
         return object.__new__(cls)
@@ -140,7 +141,7 @@ class BuildChain(object):
         signal.signal(signal.SIGABRT, build_handler)
 
     def build_packages(self, to_build_list):
-        from integration.build.centos import CentosBuild
+        #from integration.build.centos import CentosBuild
         self.signal_handler()
         for pkg in to_build_list:
             index = self.get_free_process_index()
