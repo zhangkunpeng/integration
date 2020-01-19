@@ -2,11 +2,13 @@ import argparse
 import os
 import yaml
 
-from integration.build import env, build
+from integration.build import build
 from integration.common import log
-
+from integration.common.context import Context
 _ENV = ['DISTRO', 'SYSTEM']
 _fields = ['source', 'type', 'rootdir', 'postfix', 'mirror', 'release', 'output']
+
+env = Context()
 
 
 def execute():

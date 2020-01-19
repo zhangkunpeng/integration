@@ -2,7 +2,7 @@ import os
 import json
 import shutil
 import subprocess
-from integration.build import env, shell
+from integration.build import shell
 from integration.common import log
 
 # mock_cfg = '/etc/mock/starlingx.cfg'
@@ -24,7 +24,7 @@ def init_config_opts():
     global config_opts
     if not config_opts:
         import mockbuild
-        root_cfg = os.path.join(MOCKCONFDIR, '%s.cfg' % env.system_name)
+        root_cfg = os.path.join(MOCKCONFDIR, '%s.cfg' % os.environ.get('SYSTEM'))
         config_opts = mockbuild.util.load_config(MOCKCONFDIR, root_cfg, None, __VERSION__, PKGPYTHONDIR)
 
 
@@ -34,7 +34,7 @@ class Mock(object):
         init_config_opts()
         self.config_opts = config_opts
         self.index = index
-        self.workdir = workdir or env.workdir
+        self.workdir = workdir
         if local_repo:
             self.add_local_repo(local_repo)
         if self.workdir:
@@ -42,7 +42,7 @@ class Mock(object):
         self.config_dir = os.path.join(self.workdir, 'configs')
         if not os.path.exists(self.config_dir):
             os.makedirs(self.config_dir, mode=0o755)
-        self.config_file = os.path.join(self.config_dir, '%s.b%d.cfg' % (env.system_name, self.index))
+        self.config_file = os.path.join(self.config_dir, '%s.b%d.cfg' % (os.environ.get('SYSTEM'), self.index))
         self.create_mock_conf_file()
         log.info(json.dumps(self.__dict__, indent=4))
 
