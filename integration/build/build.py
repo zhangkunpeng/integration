@@ -17,6 +17,11 @@ SKIP = 2
 ABSOLUTE_MAX_WORKERS = 4
 
 
+def do_build(build):
+    log.info("Build %s", build.pkg)
+    build.do_build()
+
+
 class BaseBuild(object):
     DISTRO = "base"
     ROOTDIR = None
@@ -139,8 +144,8 @@ class BuildChain(object):
         signal.signal(signal.SIGHUP, build_handler)
         signal.signal(signal.SIGABRT, build_handler)
 
-    def do_build(self, build):
-        build.do_build()
+    @staticmethod
+
 
     def build_packages(self, to_build_list):
         #from integration.build.centos import CentosBuild
@@ -154,7 +159,7 @@ class BuildChain(object):
             log.info("------ Start build %s in process %d ------", pkg, index)
             if pkg not in self.builds:
                 self.builds[pkg] = BaseBuild(pkg, source=os.path.join(self.source, pkg), index=index, rootdir=self.rootdir)
-            p = multiprocessing.Process(target=self.do_build, args=(self.builds[pkg],))
+            p = multiprocessing.Process(target=do_build, args=(self.builds[pkg],))
             self.procdata.append({'proc': p, 'build': self.builds[pkg]})
             p.start()
         while len(self.procdata) > 0:
