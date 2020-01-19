@@ -40,6 +40,9 @@ class CentosBuild(BaseBuild):
         mocks.append(m)
         return m
 
+    def do_build(self):
+        super(CentosBuild, self).do_build()
+
     def is_already_success(self):
         return os.path.exists(self.success_flag_file)
 

@@ -18,7 +18,7 @@ ABSOLUTE_MAX_WORKERS = 4
 
 
 def do_build(build):
-    log.info("Build %s", build.pkg)
+    log.info("Build %s in %s", build.pkg, build.DISTRO)
     build.do_build()
 
 
