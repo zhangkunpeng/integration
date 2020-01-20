@@ -82,16 +82,14 @@ class BuildChainCase(BaseCase):
         except Exception:
             assert False
 
-    @patch('integration.build.build.BaseBuild.do_build')
-    def test_build_packages(self, mock_do_build):
-        #BaseBuild.do_build = lambda x: exit(0)
-        mock_do_build.side_effect = lambda x: exit(0)
-        buildchain = BuildChain(self.source.name, self.rootdir.name, pkglist=['test1', 'test2', 'test3'], max_workers=2)
+    def test_build_packages(self):
+        pkglist = ['test1', 'test2', 'test3', 'test4', 'test5']
+        buildchain = BuildChain(self.source.name, self.rootdir.name, pkglist=pkglist, max_workers=2)
         buildchain.fetch_source()
         buildchain.fetch_package_list()
-        self.assertEqual(['test1', 'test2', 'test3'], buildchain.package_list)
+        self.assertEqual(pkglist, buildchain.package_list)
         buildchain.build_packages(buildchain.package_list)
-        self.assertEqual(3, len(buildchain.builds.keys()))
+        self.assertEqual(len(pkglist), len(buildchain.builds.keys()))
         self.assertEqual(True, buildchain.builds['test3'].success)
         self.assertEqual(True, buildchain.builds['test2'].success)
         self.assertEqual(True, buildchain.builds['test1'].success)

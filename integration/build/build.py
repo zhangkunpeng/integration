@@ -16,19 +16,21 @@ ABSOLUTE_MAX_WORKERS = 4
 
 
 def do_build(build):
-    log.info("Build %s in %s", build.pkg, build.DISTRO)
+    log.info("Start Build %s in process %d", build.pkg, build.index)
     build.do_build()
 
 
 def new_build_instance(*args, **kwargs):
-    centos = importlib.import_module('integration.build.%s' % os.environ.get('DISTRO'))
-    for name in dir(centos):
-        c = getattr(centos, name)
-        if type(c) == type:
-            for base in c.__bases__:
-                if base == BaseBuild:
-                    return c(*args, **kwargs)
-    return BaseBuild(*args, **kwargs)
+    try:
+        centos = importlib.import_module('integration.build.%s' % os.environ.get('DISTRO'))
+        for name in dir(centos):
+            c = getattr(centos, name)
+            if type(c) == type:
+                for base in c.__bases__:
+                    if base == BaseBuild:
+                        return c(*args, **kwargs)
+    except:
+        return BaseBuild(*args, **kwargs)
 
 
 class BuildChain(object):
@@ -145,6 +147,7 @@ class BuildChain(object):
         busy_index = [b['build'].index for b in self.procdata]
         for i in range(self.max_workers):
             if i not in busy_index:
+                log.info('Get free process %d', i)
                 return i
 
     def result(self):
