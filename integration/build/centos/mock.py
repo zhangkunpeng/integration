@@ -45,7 +45,7 @@ class Mock(object):
             os.makedirs(self.config_dir, mode=0o755)
         self.config_file = os.path.join(self.config_dir, '%s.b%d.cfg' % (os.environ.get('SYSTEM'), self.index))
         self.create_mock_conf_file()
-        log.info(json.dumps(self.__dict__, indent=4))
+        # log.info(json.dumps(self.__dict__, indent=4))
 
     def add_local_repo(self, local_repo_dir):
         localyumrepo = """

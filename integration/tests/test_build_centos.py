@@ -19,7 +19,7 @@ class MockCase(BaseCase):
 
     @patch('integration.build.centos.mock.init_config_opts')
     def test_mock(self, mock_init_config_opts):
-        mock_init_config_opts.side_effect = m.config_opts = {'yum.conf': ""}
+        mock_init_config_opts.side_effect = m.config_opts = {'yum.conf': "", 'macros': {}}
         mock = m.Mock(0, workdir=self.workdir.name, local_repo=self.workdir.name)
         self.assertEqual(0, mock.index)
         self.assertIn('yum.conf', m.config_opts)
