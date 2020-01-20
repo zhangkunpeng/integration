@@ -23,7 +23,7 @@ config_opts = None
 def init_config_opts():
     global config_opts
     if not config_opts:
-        import mockbuild
+        import mockbuild.util
         root_cfg = os.path.join(MOCKCONFDIR, '%s.cfg' % os.environ.get('SYSTEM'))
         config_opts = mockbuild.util.load_config(MOCKCONFDIR, root_cfg, None, __VERSION__, PKGPYTHONDIR)
 
