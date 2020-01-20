@@ -7,6 +7,8 @@ RUN yum install -y epel-release git rpm-build rpm-sign make createrepo gcc && \
                    python36-yaml \
                    python36-psutil
 
+RUN useradd -s /sbin/nologin -u 9001 -g 9001 mockbuild
+
 COPY docker/centos7/starlingx.cfg /etc/mock/starlingx.cfg
 
 ADD . /integration
