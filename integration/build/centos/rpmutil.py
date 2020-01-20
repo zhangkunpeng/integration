@@ -19,7 +19,7 @@ def build_srpm(specfile, topdir=None, **kwargs):
 
     lines = []
     with open(specfile, 'r') as f:
-        for l in f.readlines():
+        for l in f:
             lines.append(l)
     for k, v in kwargs.items():
         lines.insert(0, "%%define %s %s\n" % (k, v))
