@@ -17,7 +17,7 @@ def build_srpm(specfile, topdir=None, **kwargs):
     if topdir:
         cmd.append('--define=%%_topdir %s' % topdir)
     for k, v in kwargs.items():
-        cmd.append('--define=\'%s %s\'' % (k, v))
+        cmd.append('--define=%s %s' % (k, v))
     ret = shell.popen_communicate(cmd)
     if ret != 0:
         raise exception.CriticalException('BUILD SRPM Failed!')
