@@ -29,7 +29,7 @@ def new_build_instance(*args, **kwargs):
                 for base in c.__bases__:
                     if base == BaseBuild:
                         return c(*args, **kwargs)
-    except:
+    except ModuleNotFoundError:
         return BaseBuild(*args, **kwargs)
 
 
