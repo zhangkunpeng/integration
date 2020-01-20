@@ -36,8 +36,10 @@ def popen_communicate(cmd, input=None, timeout=None, **kwargs):
     ret = subprocess.Popen(cmd, **kwargs)
     out, err = ret.communicate(input=input, timeout=timeout)
     log.info("Return Code: %d", ret.returncode)
-    log.debug(out.decode("UTF-8"))
-    log.error(err.decode("UTF-8"))
+    if out and type(out) == bytes:
+        log.debug(out.decode("utf-8"))
+    if err and type(err) == bytes:
+        log.error(err.decode("utf-8"))
     return ret.returncode
 
 

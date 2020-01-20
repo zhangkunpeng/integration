@@ -12,6 +12,7 @@ mocks = []
 
 
 class CentosBuild(BaseBuild):
+
     DISTRO = "centos"
 
     def __init__(self, pkg, **kwargs):
@@ -155,7 +156,6 @@ class CentosBuild(BaseBuild):
         self.name = rpmutil.query_srpm_tag(self.srpm_file, 'Name')
         self.version = rpmutil.query_srpm_tag(self.srpm_file, 'Version')
         self.release = rpmutil.query_srpm_tag(self.srpm_file, 'Release')
-
 
     def __copy_additional_src(self):
         """
