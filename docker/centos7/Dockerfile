@@ -1,10 +1,13 @@
 FROM centos:7
 
-ENV DISTRO="centos", SYSTEM="starlingx"
+ENV DISTRO="centos"
+ENV SYSTEM="starlingx"
 RUN yum install -y epel-release git rpm-build rpm-sign make createrepo gcc && \
     yum install -y python3-pip mock \
                    python36-yaml \
                    python36-psutil
+
+COPY docker/centos7/starlingx.cfg /etc/mock/starlingx.cfg
 
 ADD . /integration
 

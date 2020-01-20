@@ -3,6 +3,7 @@ import json
 import shutil
 import subprocess
 from integration.build import shell
+from integration.build.api import env
 from integration.common import log
 
 # mock_cfg = '/etc/mock/starlingx.cfg'
@@ -65,6 +66,8 @@ best=1
         self.config_opts['backup_base_dir'] = '{0}/backup'.format(basedir)
         self.config_opts['root'] = 'mock/b{0}'.format(self.index)
         self.config_opts['cache_topdir'] = '{0}/cache/b{1}'.format(basedir, self.index)
+        self.config_opts['macros']['%_tis_dist'] = '.%s' % env.postfix
+        self.config_opts['macros']['%_tis_build_type'] = env.type
         if self.index > 0:
             self.config_opts['plugin_conf']['tmpfs_enable'] = True
             self.config_opts['plugin_conf']['tmpfs_opts'] = {}
