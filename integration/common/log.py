@@ -12,7 +12,7 @@ def CONF(name, logdir=os.getcwd(), console=True):
     logfile = os.path.join(logdir, '%s.log' % name)
     if not os.path.exists(os.path.dirname(logfile)):
         os.makedirs(os.path.dirname(logfile))
-    formatter = logging.Formatter("%(asctime)s %(levelname)8s %(process)s %(thread)s %(message)s")
+    formatter = logging.Formatter("%(asctime)s %(levelname)8s %(process)s %(message)s")
     global logger
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)

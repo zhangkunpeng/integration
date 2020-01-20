@@ -63,6 +63,9 @@ class BaseBuild(object):
     def compile(self):
         log.info('%s compile', self.DISTRO)
 
+    def cleanup(self):
+        pass
+
     def update_repo(self, max_workers=None):
         pass
 

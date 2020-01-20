@@ -7,6 +7,7 @@ from integration.common import log, utils
 from integration.build.centos import mock, rpmutil
 import os
 import subprocess
+import shutil
 
 mocks = []
 
@@ -46,6 +47,10 @@ class CentosBuild(BaseBuild):
 
     def is_already_success(self):
         return os.path.exists(self.success_flag_file)
+
+    def cleanup(self):
+        shutil.rmtree(self.build_srpm_dir)
+        shutil.rmtree(self.build_rpm_dir)
 
     def prepare_source(self):
         if self.srpm_file is None:
