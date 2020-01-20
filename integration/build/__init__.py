@@ -22,8 +22,7 @@ class BaseBuild(object):
     def __init__(self, pkg, rootdir=None, source=None, index=None, **kwargs):
         self.pkg = pkg
         self.__class__.ROOTDIR = rootdir
-        self.source = source
-        self.pkgdir = os.path.join(source, pkg)
+        self.pkgdir = source
         self.name = os.path.basename(self.pkg)
         self.__class__.WORKDIR = os.path.join(self.ROOTDIR, self.__class__.__name__)
         self.build_dir = os.path.join(self.WORKDIR, self.name)
