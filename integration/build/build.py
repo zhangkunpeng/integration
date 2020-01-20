@@ -94,8 +94,7 @@ class BuildChain(object):
                 time.sleep(0.1)
                 index = self.get_free_process_index()
             log.info("------ Start build %s in process %d ------", pkg, index)
-            if pkg not in self.builds:
-                self.builds[pkg] = new_build_instance(pkg, source=os.path.join(self.source, pkg),
+            self.builds[pkg] = new_build_instance(pkg, source=os.path.join(self.source, pkg),
                                                       index=index, rootdir=self.rootdir)
             p = multiprocessing.Process(target=do_build, args=(self.builds[pkg],), name=pkg)
             self.procdata.append({'proc': p, 'build': self.builds[pkg]})
