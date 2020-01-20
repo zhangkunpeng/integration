@@ -18,12 +18,12 @@ def build_srpm(specfile, topdir=None, **kwargs):
         cmd.append('--define=%%_topdir %s' % topdir)
 
     lines = []
-    with open(specfile, 'r') as f:
+    with open(specfile, 'r', encoding='utf-8') as f:
         for l in f:
             lines.append(l)
     for k, v in kwargs.items():
         lines.insert(0, "%%define %s %s\n" % (k, v))
-    with open(specfile, 'w') as f:
+    with open(specfile, 'w', encoding='utf-8') as f:
         f.write(''.join(lines))
     ret = shell.popen_communicate(cmd)
     if ret != 0:
