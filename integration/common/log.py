@@ -34,7 +34,7 @@ def info(msg, *args, **kwargs):
     pid = os.getpid()
     p = psutil.Process(pid)
     p.name()
-    logger.info('%s %s' % (p.name(),msg), *args, **kwargs)
+    logger.info(msg, *args, **kwargs)
 
 
 def debug(msg, *args, **kwargs):

@@ -16,8 +16,15 @@ def build_srpm(specfile, topdir=None, **kwargs):
     cmd = [rpmbuild, '-bs', specfile, '--undefine=dist']
     if topdir:
         cmd.append('--define=%%_topdir %s' % topdir)
+
+    lines = []
+    with open(specfile, 'r') as f:
+        for l in f.readlines():
+            lines.append(l)
     for k, v in kwargs.items():
-        cmd.append('--define=%s %s' % (k, v))
+        lines.insert(0, "%%define %s %s\n" % (k, v))
+    with open(specfile, 'w') as f:
+        f.write(''.join(lines))
     ret = shell.popen_communicate(cmd)
     if ret != 0:
         raise exception.CriticalException('BUILD SRPM Failed!')

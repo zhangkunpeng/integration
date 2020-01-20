@@ -21,7 +21,7 @@ class CentosBuild(BaseBuild):
         self.distro_repo = os.path.join(env.mirror, "cgcs-centos-repo")
         self.third_party = os.path.join(env.mirror, "cgcs-3rd-party-repo")
         self.TIS_DIST = '.%s' % env.postfix
-        self.__class__.LOCAL_REPO_DIR = os.path.join(self.WORKDIR, "repo/%s" % env.system_name)
+        self.__class__.LOCAL_REPO_DIR = os.path.join(self.WORKDIR, "repo/%s" % env.SYSTEM)
         if not os.path.exists(self.LOCAL_REPO_DIR):
             os.makedirs(self.LOCAL_REPO_DIR, mode=0o755)
         self.mock = self.build_mock()
@@ -49,8 +49,9 @@ class CentosBuild(BaseBuild):
         return os.path.exists(self.success_flag_file)
 
     def cleanup(self):
-        shutil.rmtree(self.build_srpm_dir)
-        shutil.rmtree(self.build_rpm_dir)
+        for dirname in [self.build_srpm_dir, self.build_rpm_dir]:
+            if os.path.exists(dirname):
+                shutil.rmtree(dirname)
 
     def prepare_source(self):
         if self.srpm_file is None:
@@ -63,7 +64,7 @@ class CentosBuild(BaseBuild):
         result_dir = os.path.join(self.LOCAL_REPO_DIR, self.fullname())
         self.mkdirs(result_dir)
         defines = {
-            '_tis_dist': env.TIS_DIST,
+            '_tis_dist': self.TIS_DIST,
             'platform_release': env.release
         }
         ret = self.mock.execute(self.srpm_file, result_dir=result_dir, defines=defines)
