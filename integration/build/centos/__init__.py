@@ -173,7 +173,7 @@ class CentosBuild(BaseBuild):
 
            centos/patches
         """
-        if self.COPY_LIST:
+        if 'COPY_LIST' in self.__dict__:
             copy_path_list = self.COPY_LIST.split(' ')
             log.debug('COPY_LIST: %s', copy_path_list)
             for p in copy_path_list:
@@ -193,4 +193,4 @@ class CentosBuild(BaseBuild):
             with open(meta_patch_order) as f:
                 for line in f.readlines():
                     patchfile = os.path.join(meta_patch_dir, line.strip())
-                    shell.patch_apply(patchfile, cmd=self.build_dir)
+                    shell.patch_apply(patchfile, cwd=self.build_dir)

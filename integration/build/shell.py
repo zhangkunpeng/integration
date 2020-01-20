@@ -43,14 +43,14 @@ def popen_communicate(cmd, input=None, timeout=None, **kwargs):
     return ret.returncode
 
 
-def patch_apply(patchfile, cmd):
+def patch_apply(patchfile, cwd):
     if not os.path.isfile(patchfile):
         return
     log.info("apply patch: %s" % patchfile)
     #patch -f $PATCH_ARGS --no-backup-if-mismatch < $PATCH
     #cmd = [patch, '-f', '-p1', '--no-backup-if-mismatch', '<', patchfile]
-    cmd = ["%s -f -p1 --no-backup-if-mismatch < %s" %(patch, patchfile)]
-    return check_call(cmd, cwd=cmd, shell=True)
+    cmd = ["%s -f -p1 --no-backup-if-mismatch < %s" % (patch, patchfile)]
+    return check_call(cmd, cwd=cwd, shell=True)
 
 
 def echo_env(envfile, env, key):
