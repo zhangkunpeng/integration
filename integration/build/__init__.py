@@ -47,6 +47,7 @@ class BaseBuild(object):
         if self.is_already_success():
             exit(SKIP)
         try:
+            self.cleanup()
             self.prepare_source()
             self.compile()
             exit(SUCCESS)
