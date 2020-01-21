@@ -154,8 +154,8 @@ class CentosBuild(BaseBuild):
         defines = {
             '_tis_build_type': env.type,
             'tis_patch_ver': self.TIS_PATCH_VER,
-            'platform_release': env.release,
-            '_tis_dist': self.TIS_DIST
+            # 'platform_release': env.release,
+            # '_tis_dist': self.TIS_DIST
         }
         rpmutil.build_srpm(specfiles[0], topdir=self.build_dir, **defines)
         self.srpm_file = utils.find_out_files(self.build_srpm_dir, ".src.rpm")[0]
