@@ -9,8 +9,8 @@ RUN yum install -y epel-release git rpm-build rpm-sign make createrepo gcc && \
 
 RUN groupadd -g 751 cgts && \
     echo "mock:x:751:root" >> /etc/group && \
-    echo "mockbuild:x:9001:" >> /etc/group && \
-    useradd -s /sbin/nologin -u 9001 -g 9001 mockbuild && \
+#    echo "mockbuild:x:9001:" >> /etc/group && \
+#    useradd -s /sbin/nologin -u 9001 -g 9001 mockbuild && \
     echo "config_opts['use_nspawn'] = False" >> /etc/mock/site-defaults.cfg && \
     echo "config_opts['rpmbuild_networking'] = True" >> /etc/mock/site-defaults.cfg && \
     echo  >> /etc/mock/site-defaults.cfg
