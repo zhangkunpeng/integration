@@ -24,6 +24,4 @@ WORKDIR /integration
 
 RUN python3 setup.py install
 
-USER starlingx
-
 CMD /usr/sbin/init
