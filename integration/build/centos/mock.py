@@ -108,7 +108,7 @@ best=1
             cmd.extend(['--resultdir', result_dir])
         if defines:
             for k, v in defines.items():
-                cmd.extend(['--define', "'%s %s'" % (k, v)])
+                cmd.extend(['--define', "%s %s" % (k, v)])
         cmd.append(srpm_file)
         return shell.popen_communicate(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
