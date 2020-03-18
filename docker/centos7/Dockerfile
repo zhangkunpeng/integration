@@ -2,7 +2,7 @@ FROM centos:7
 
 ENV DISTRO=centos
 ARG USER=starlingx
-RUN yum install -y epel-release git rpm-build rpm-sign make createrepo gcc sudo && \
+RUN yum install -y epel-release git rpm-build rpm-sign make createrepo gcc sudo wget && \
     yum install -y python3-pip mock \
                    python36-yaml \
                    python36-psutil

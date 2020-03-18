@@ -1,5 +1,8 @@
 import json
 import os
+
+import requests
+
 from build import logger, shell, utils
 from build.centos import rpmutil
 from build.context import Context
@@ -39,9 +42,10 @@ class CentosBuild(object):
         self.success = False
         self.platform_release = ctxt.release
         self.type = ctxt.type
+        self.remote_url = "http://mirror.starlingx.cengn.ca/mirror/starlingx/release/3.0.0/centos/inputs/"
 
     def update_context(self):
-        log.info(json.dumps(self.__dict__))
+        log.info(json.dumps(self.__dict__, indent=4))
 
     def build_srpm(self):
         self.find_build_mode()
@@ -88,9 +92,12 @@ class CentosBuild(object):
                     .replace("CentOS/tis-r3-CentOS/mitaka/", "")
             else:
                 filepath = self.distro_repo + "/" + line
-            if os.path.exists(filepath):
-                return filepath
-            log.error("Invalid srpm path '%s', evaluated as '%s', found in '%s'" % (line, filepath, srpm_path))
+            if not os.path.exists(filepath):
+                log.info("%s is not existed, download now!", filepath)
+                r = requests.get(self.remote_url + "SRPM/" + os.path.basename(filepath))
+                with open(filepath, "wb") as f:
+                    f.write(r.content)
+            return filepath
 
         if os.path.exists(srpm_path):
             with open(srpm_path) as f:
@@ -103,7 +110,7 @@ class CentosBuild(object):
         for filename in os.listdir(spec_path):
             if filename.endswith(".spec"):
                 self.original_file = os.path.join(spec_path, filename)
-        if not self.original_file:
+        if not os.path.exists(self.original_file):
             log.exception("Please provide only one of srpm_path or .spec files, not None, in '%s'" % spec_path)
 
     def find_build_data(self):

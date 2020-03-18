@@ -46,7 +46,7 @@ def query_srpm_tag(srpmfile, tag):
 
 def build_rpm(srpm_file, topdir):
     log.info("##### BUILD RPM - %s" % srpm_file)
-    cmd = [" ".join([rpmbuild, "-bb", srpm_file, "--define='%%_topdir %s'" % topdir])]
+    cmd = [rpmbuild, "--rebuild", srpm_file, '--define=%%_topdir %s' % topdir]
     ret = shell.popen_communicate(cmd)
     if ret == 0:
         log.info("BUILD SUCCESS")

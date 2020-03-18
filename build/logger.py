@@ -19,7 +19,7 @@ def init(logfile):
 
 
 def getLogger(name, file=None, std=True):
-    formatter = logging.Formatter("%(asctime)s %(levelname)8s %(name)s %(funcName)s %(lineno)d %(message)s")
+    formatter = logging.Formatter("%(asctime)s %(levelname)8s %(name)s %(funcName)s %(message)s")
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
     if file:

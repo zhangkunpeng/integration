@@ -36,4 +36,4 @@ def execute(ctxt):
             break
         ctxt.build[build.name] = build
 
-    log.info(json.dumps(result))
+    log.info(json.dumps(result, indent=4))
