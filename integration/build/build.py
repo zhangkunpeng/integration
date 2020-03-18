@@ -7,7 +7,7 @@ import time
 import json
 import importlib
 
-from integration.build import shell, BaseBuild, SKIP, SUCCESS, FAIL
+from integration.build import shell, BaseBuild, SKIP, SUCCESS, FAIL, new_builder
 from integration.common import context, log
 from integration.common.exception import *
 
@@ -18,6 +18,7 @@ ABSOLUTE_MAX_WORKERS = 4
 def do_build(build):
     log.info("Start Build %s in process %d", build.pkg, build.index)
     build.do_build()
+    return build
 
 
 def new_build_instance(*args, **kwargs):
@@ -169,3 +170,19 @@ following pkgs are successfully built:
 %s
 *** Build Successfully ***
             ''', '\n'.join(success))
+
+
+    def on_build_process_finished(self, builder):
+        if builder.success:
+            log.info("BUILD SUCCESS : %s", builder.pkg)
+        else:
+            log.error("BUILD FAILED : %s", builder.pkg)
+
+    def start_build(self, build_list, processes):
+        pool = multiprocessing.Pool(processes=processes)
+        for pkg in build_list:
+            builder = new_builder(pkg)
+            pool.apply_async(func=do_build, args=(builder,), callback=self.on_build_process_finished)
+        pool.close()
+        pool.join()
+

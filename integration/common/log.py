@@ -7,6 +7,41 @@ from integration.common.exception import CriticalException
 
 logger = None
 
+LOGFILE = os.path.join(os.getcwd(), 'build.log')
+
+
+def CONFIG(filename=None):
+    logging.basicConfig(filename=filename,
+                        format='%(asctime)s %(levelname)s %(process)s %(name)s %(funcName)s %(lineno)d %(message)s',
+                        level=logging.DEBUG)
+
+
+def getLogger(name, std=True):
+    _logger = logging.getLogger(name)
+    if std:
+        console = logging.StreamHandler()
+        console.setLevel(logging.INFO)
+        console.setFormatter(logging.Formatter(fmt='%(asctime)s %(levelname)s %(process)s %(name)s %(message)s',
+                                               datefmt='%H:%M:%S'))
+        console.set_name('console')
+        _logger.addHandler(console)
+
+    return _logger
+
+
+
+def getLogger(name):
+    logging.basicConfig(filename=LOGFILE,
+                        format='%(asctime)s %(levelname)s %(process)s %(name)s %(funcName)s %(lineno)d %(message)s',
+                        level=logging.DEBUG)
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    console.setFormatter(logging.Formatter(fmt='%(asctime)s %(levelname)s %(process)s %(name)s %(message)s',
+                                           datefmt='%H:%M:%S'))
+    _logger = logging.getLogger(name)
+    _logger.addHandler(console)
+    return _logger
+
 
 def CONF(name, logdir=os.getcwd(), console=True):
     logfile = os.path.join(logdir, '%s.log' % name)
@@ -34,6 +69,7 @@ def info(msg, *args, **kwargs):
     pid = os.getpid()
     p = psutil.Process(pid)
     p.name()
+    multiprocessing.get_logger()
     logger.info(msg, *args, **kwargs)
 
 

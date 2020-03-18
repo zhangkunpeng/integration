@@ -5,10 +5,11 @@ import yaml
 from integration.build.build import BuildChain
 from integration.common import log
 from integration.common.context import Context
-_ENV = ['DISTRO', 'SYSTEM']
+_ENV = ['DISTRO', 'USER']
 _fields = ['source', 'type', 'rootdir', 'postfix', 'mirror', 'release', 'output']
 
 env = Context()
+context = Context()
 
 
 def execute():
@@ -33,6 +34,17 @@ def execute():
     chain.fetch_package_list()
     chain.build_iteration()
 
+fields = [
+    ('source',  'input the source which to build, dir or git repo is required'),
+    ('branch',  'the git repo branch'),
+    ('type',    'build type'),
+    ('rootdir', 'input the root dir'),
+    ('output',  'input the output repo dir'),
+    ('mirror',  'input the mirror path'),
+    ('release', 'input the release'),
+    ('postfix', 'input the postfix'),
+    ('package', 'input the build package')
+]
 
 def main():
     parser = argparse.ArgumentParser()
@@ -40,7 +52,7 @@ def main():
     parser.add_argument("--source", help="input the source which to build, dir or git repo is required")
     parser.add_argument("--branch", help="the git repo branch")
     parser.add_argument("--type", help="build type", choices=["std", "rt"], default="std")
-    parser.add_argument("--rootdir", help="input the work dir")
+    parser.add_argument("--rootdir", help="input the root dir")
     parser.add_argument("--output", help="input the output repo dir")
     parser.add_argument("--mirror", help="input the mirror path")
     parser.add_argument("--release", help="input the release")

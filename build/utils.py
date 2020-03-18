@@ -1,5 +1,7 @@
 import os, shutil
-from integration.common import log
+from build import logger
+
+log = logger.getLogger("utils")
 
 
 def copy(src, dist):
@@ -31,3 +33,15 @@ def find_out_files(d, suffix):
     if not files:
         log.error("Can not find out '%s' files in %s" % (suffix, d))
     return files
+
+
+def clean_dir(*dirpaths):
+    for dirpath in dirpaths:
+        if os.path.isdir(dirpath):
+            shutil.rmtree(dirpath)
+
+
+def makedirs(*dirpaths):
+    for dirpath in dirpaths:
+        if not os.path.exists(dirpath):
+            os.makedirs(dirpath)

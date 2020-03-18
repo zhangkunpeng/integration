@@ -1,5 +1,6 @@
 import os
 from integration.common import log
+import importlib
 SUCCESS = 0
 FAIL = 1
 SKIP = 2
@@ -7,41 +8,33 @@ SKIP = 2
 
 class BaseBuild(object):
     DISTRO = "base"
-    ROOTDIR = None
-    WORKDIR = None
-    LOCAL_REPO_DIR = None
 
-    # def __new__(cls, *args, **kwargs):
-    #     from integration.build.centos import CentosBuild
-    #     for c in BaseBuild.__subclasses__():
-    #         print(c, c.DISTRO, os.environ.get('DISTRO', 'base'))
-    #         if c.DISTRO == os.environ.get('DISTRO', 'base'):
-    #             return c.__new__(*args, **kwargs)
-    #     return object.__new__(cls)
-
-    def __init__(self, pkg, rootdir=None, source=None, index=None, **kwargs):
+    def __init__(self, pkg, source=None, rootdir=None, index=None, type=None, **kwargs):
         self.pkg = pkg
-        self.__class__.ROOTDIR = rootdir
+        self.rootdir = rootdir
         self.pkgdir = source
+        self.type = type
         self.name = os.path.basename(self.pkg)
-        self.__class__.WORKDIR = os.path.join(self.ROOTDIR, self.__class__.__name__)
-        self.build_dir = os.path.join(self.WORKDIR, self.name)
+        self.workdir = os.path.join(self.rootdir, self.__class__.__name__.lower(), self.type)
         self.index = index
         self.success = False
-        self.success_flag_file = os.path.join(self.build_dir, 'success')
-        self.fail_flag_file = os.path.join(self.build_dir, 'fail')
+        self.success_flag_file = os.path.join(self.workdir, 'success')
+        self.fail_flag_file = os.path.join(self.workdir, 'fail')
         self.version = None
         self.release = None
+        self.mkdirs(self.workdir)
 
     def mark_success(self):
-        with open(self.success_flag_file, 'w') as f:
-            f.write('DONE')
+        with open(self.success_flag_file, 'a') as f:
+            f.write('%s\n' % self.pkg)
             f.flush()
+        log.info('BUILD SUCCESS')
 
     def mark_fail(self):
-        with open(self.fail_flag_file, 'w') as f:
-            f.write('DONE')
+        with open(self.fail_flag_file, 'a') as f:
+            f.write('%s\n' % self.pkg)
             f.flush()
+        log.info('BUILD FAIL')
 
     def do_build(self):
         if self.is_already_success():
@@ -56,7 +49,15 @@ class BaseBuild(object):
             exit(FAIL)
 
     def is_already_success(self):
-        return os.path.exists(self.success_flag_file)
+        with open(self.fail_flag_file, 'r') as f:
+            for line in f.readlines():
+                if self.pkg == line.strip():
+                    return False
+        with open(self.success_flag_file, 'r') as f:
+            for line in f.readlines():
+                if self.pkg == line.strip():
+                    return True
+        return False
 
     def prepare_source(self):
         log.info('%s prepare_source', self.DISTRO)
@@ -79,4 +80,35 @@ class BaseBuild(object):
         return '%s-%s-%s' % (self.name, self.version, self.release)
 
 
+class Builder(object):
+
+    OS = 'undefined'
+    SYSTEM = 'undefined'
+
+    def __init__(self, pkg=None, context=None):
+        self.pkg = pkg
+        self.context = context
+        self.name = os.path.basename(pkg)
+        self.version = None
+        self.release = None
+        self.workdir = os.path.join(context.rootdir, self.__class__.__name__.lower(), context.build_type)
+        self.success = False
+        self.pkgdir = os.path.join(context.source, pkg)
+        self.success_flag_file = os.path.join(self.workdir, 'success')
+
+    def do_build(self, lock, ctxt):
+        with lock:
+            self.success = self.is_already_success()
+
+    def mark_success(self):
+        with open(self.success_flag_file, 'a') as f:
+            f.write('%s\n' % self.pkg)
+            f.flush()
+
+    def is_already_success(self):
+        with open(self.success_flag_file, 'r') as f:
+            for line in f.readlines():
+                if self.pkg == line.strip():
+                    return True
+        return False
 

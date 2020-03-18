@@ -1,0 +1,66 @@
+
+def BRANCH="master"
+def LABEL="stxbuild-centos-${BRANCH}"
+def PODNAME=LABEL
+def WORKCONTAINER=LABEL
+def WORKDIR="/opt/jenkins"
+def ROOTDIR="${WORKDIR}/${BRANCH}"
+def
+def BUILD_TIME="/opt/jenkins/centos/${BRANCH}/.buildtime"
+def BUILD_DIR="/opt/jenkins/centos/${BRANCH}"
+def BUILD_FLAG="compile"
+def HTTP_PATH="/usr/local/apache2/htdocs"
+def MIRROR_PATH="${WORKDIR}/${BRANCH}/mirror"
+def YUM_CACHE_PATH="${MIRROR_PATH}/cache"
+
+podTemplate(
+    name: PODNAME,
+    cloud: 'kubernetes',
+    namespace: 'devops',
+    label: LABEL,
+    serviceAccount: 'default',
+    containers: [
+        containerTemplate(
+            name: WORKCONTAINER,
+            image: 'kunpeng4code/stxbuilder:latest-centos7',
+            ttyEnabled: true,
+            privileged: false,
+            alwaysPullImage:true
+        ),
+        containerTemplate(
+            name: 'stx-build-httpd',
+            image: 'httpd:2',
+            ttyEnabled: true,
+            privileged: false,
+            alwaysPullImage:false
+        )
+    ],
+    envVars: [
+        envVar(key: "BRANCH", value: "master")
+    ],
+    volumes: [
+        hostPathVolume(mountPath: WORKDIR, hostPath: WORKDIR),
+        hostPathVolume(mountPath: HTTP_PATH, hostPath: MIRROR_PATH),
+        hostPathVolume(mountPath: "/var/cache/yum", hostPath: YUM_CACHE_PATH),
+    ]
+) {
+    node(LABEL){
+        stage('check yum centos repo') {
+            container("jnlp") {
+                git url: 'https://opendev.org/starlingx/compile.git',
+                    branch: '${BRANCH}'
+            }
+        }
+        stage('Build') {
+            container(WORKCONTAINER) {
+                withEnv(["MIRROR=${HTTP_PATH}","BRANCH=${BRANCH}"]){
+                    sh """
+                        echo "MIRROR=$MIRROR BRANCH=$BRANCH"
+                        build --source ./compile --rootdir $ROOTDIR/test --type std --mirror ${HTTP_PATH} \
+                              --output $ROOTDIR --release 20.01 --postfix stx
+                    """
+                }
+            }
+        }
+    }
+}
