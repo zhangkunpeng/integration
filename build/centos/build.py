@@ -14,7 +14,7 @@ class CentosBuild(object):
         self.package = package
         self.abspath = os.path.join(ctxt.project, package)
         self.distro_dir = os.path.join(ctxt.project, package, ctxt.os)
-        self.distro_repo = os.path.join(ctxt.mirror, "cgcs-centos-repo/Source/bashXXXXX.src.rpm")
+        self.distro_repo = os.path.join(ctxt.mirror, "cgcs-centos-repo")
         self.third_party = os.path.join(ctxt.mirror, "cgcs-3rd-party-repo")
         self.env = Context({
             'FILES_BASE': "%s/files" % ctxt.os,
@@ -104,7 +104,7 @@ class CentosBuild(object):
             if filename.endswith(".spec"):
                 self.original_file = os.path.join(spec_path, filename)
         if not self.original_file:
-            log.error("Please provide only one of srpm_path or .spec files, not None, in '%s'" % spec_path)
+            log.exception("Please provide only one of srpm_path or .spec files, not None, in '%s'" % spec_path)
 
     def find_build_data(self):
         build_srpm_data = os.path.join(self.distro_dir, "build_srpm.data")
