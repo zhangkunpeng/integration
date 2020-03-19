@@ -49,6 +49,7 @@ def prepare_context(context):
 def fetch_project(ctxt):
     if re.match(r'(?:http|ftp)s?://', ctxt.project, re.I):
         dirname = os.path.basename(ctxt.project)
+        # branch
         shell.git_checkout(ctxt.project, dist_dir=os.path.join(ctxt.rootdir, 'projects', dirname))
         ctxt.project = os.path.join(ctxt.rootdir, 'projects', dirname)
     if not os.path.isdir(ctxt.project):

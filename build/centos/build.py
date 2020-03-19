@@ -94,7 +94,7 @@ class CentosBuild(object):
                 filepath = self.distro_repo + "/" + line
             if not os.path.exists(filepath):
                 log.info("%s is not existed, download now!", filepath)
-                r = requests.get(self.remote_url + "SRPM/" + os.path.basename(filepath))
+                r = requests.get(self.remote_url + "SRPMS/" + os.path.basename(filepath))
                 with open(filepath, "wb") as f:
                     f.write(r.content)
             return filepath
@@ -131,7 +131,7 @@ class CentosBuild(object):
 
     def __copy_additional_src(self):
         """
-        复制额外的source 和patches 到 rpmbuild/SOURCES
+        复制额外的source 和patches 到 srpmbuild/SOURCES
         example:
            files/*
            centos/files/*
